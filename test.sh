@@ -4,11 +4,11 @@ interval=1
 timeout=30
 
 setf() {
-	cpupower frequency-set -f $1MHz > /dev/null
+	cpupower frequency-set -f "$1MHz" > /dev/null
 }
 
 set_boost() {
-	echo $1 > /sys/devices/system/cpu/cpufreq/boost
+	echo "$1" > /sys/devices/system/cpu/cpufreq/boost
 }
 
 run_test() {
@@ -21,8 +21,8 @@ run_test() {
 
 	cpupower frequency-set -g userspace > /dev/null
 
-	case "$pstate" in 
-		"P2") 
+	case "$pstate" in
+		"P2")
 			set_boost 0
 			setf 1500
 			;;
@@ -34,7 +34,7 @@ run_test() {
 			set_boost 0
 			setf 3000
 			;;
-		"PB")	
+		"PB")
 			set_boost 1
 			setf 3000
 			;;
@@ -60,7 +60,7 @@ run_test() {
 			cpuset="12,14"
 			numcpu=2
 			;;
-		"2-2-1-C") 
+		"2-2-1-C")
 			cpuset="12,15"
 			numcpu=2
 			;;
@@ -96,7 +96,7 @@ run_test() {
 			cpuset="7,15"
 			numcpu=2
 			;;
-		"2-2-2-F") 
+		"2-2-2-F")
 			cpuset="11,15"
 			numcpu=2
 			;;
@@ -109,12 +109,12 @@ run_test() {
 			exit 1
 	esac
 
-	echo $cpuset > $pstate-$config.cpuset
+	echo "$cpuset" > "$pstate-$config.cpuset"
 
-	cpupower frequency-info > $config.info
+	cpupower frequency-info > "$config.info"
 
-	turbostat -q --interval $interval -out $pstate-$config.out taskset -c $cpuset stress --cpu $numcpu --timeout $timeout
-}	
+	turbostat -q --interval "$interval" -out "$pstate-$config.out" taskset -c "$cpuset" stress --cpu "$numcpu" --timeout "$timeout"
+}
 
 echo 0 > /proc/sys/kernel/numa_balancing
 echo 0 > /proc/sys/kernel/randomize_va_space
@@ -124,7 +124,7 @@ for pstate in "P2" "P1" "P0" "PB"
 do
 	for config in "1-1-1" "2-1-1" "2-2-1-A" "2-2-1-B" "2-2-1-C" "2-2-1-D" "2-2-1-E" "2-2-1-F" "2-2-2-A" "2-2-2-B" "2-2-2-C" "2-2-2-D" "2-2-2-E" "2-2-2-F" "32-16-4"
 	do
-		run_test $pstate $config
+		run_test "$pstate" "$config"
 		sleep 2
 	done
 done
