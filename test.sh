@@ -44,64 +44,23 @@ run_test() {
 	esac
 
 	case "$config" in
-		"1-1-1")
-			cpuset="12"
+		# threads-cores-CCXx
+		"1-1")
+			cpuset="32"
 			numcpu=1
 			;;
-		"2-1-1")
-			cpuset="12,28"
+		"2-1")
+			# 2 cores on same CPU
+			cpuset="1,33"
 			numcpu=2
 			;;
-		"2-2-1-A")
-			cpuset="12,13"
+		"2-2")
+			# 2 cores on 2 different CPUs
+			cpuset="34,35"
 			numcpu=2
 			;;
-		"2-2-1-B")
-			cpuset="12,14"
-			numcpu=2
-			;;
-		"2-2-1-C")
-			cpuset="12,15"
-			numcpu=2
-			;;
-		"2-2-1-D")
-			cpuset="13,14"
-			numcpu=2
-			;;
-		"2-2-1-E")
-			cpuset="13,15"
-			numcpu=2
-			;;
-		"2-2-1-F")
-			cpuset="14,15"
-			numcpu=2
-			;;
-		"2-2-2-A")
-			cpuset="3,7"
-			numcpu=2
-			;;
-		"2-2-2-B")
-			cpuset="3,11"
-			numcpu=2
-			;;
-		"2-2-2-C")
-			cpuset="3,15"
-			numcpu=2
-			;;
-		"2-2-2-D")
-			cpuset="7,11"
-			numcpu=2
-			;;
-		"2-2-2-E")
-			cpuset="7,15"
-			numcpu=2
-			;;
-		"2-2-2-F")
-			cpuset="11,15"
-			numcpu=2
-			;;
-		"32-16-4")
-			cpuset="0-31"
+		"64-32")
+			cpuset="0-63"
 			numcpu=32
 			;;
 		*)
@@ -122,9 +81,10 @@ swapoff -a
 
 for pstate in "P2" "P1" "P0" "PB"
 do
-	for config in "1-1-1" "2-1-1" "2-2-1-A" "2-2-1-B" "2-2-1-C" "2-2-1-D" "2-2-1-E" "2-2-1-F" "2-2-2-A" "2-2-2-B" "2-2-2-C" "2-2-2-D" "2-2-2-E" "2-2-2-F" "32-16-4"
+	for config in "1-1" "2-1" "2-2" "64-32"
 	do
 		run_test "$pstate" "$config"
-		sleep 2
+		echo "Sleeping..."
+		sleep 30
 	done
 done
